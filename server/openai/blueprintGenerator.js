@@ -23,7 +23,10 @@ export async function generateBlueprint(answers, interpretedProfile) {
   const result = BlueprintDataSchema.safeParse(data)
   if (!result.success) {
     console.error('[Blueprint] Schema validation failed:', result.error.issues)
-    throw new Error(`Blueprint output validation failed: ${JSON.stringify(result.error.issues)}`)
+    console.error('[Blueprint] Raw keys received:', Object.keys(data))
+    // Return raw data anyway so the frontend can render what it can
+    console.warn('[Blueprint] Returning raw data despite validation failure')
+    return data
   }
 
   return result.data

@@ -23,7 +23,9 @@ export async function interpretAnswers(answers, signals) {
   const result = InterpretedProfileSchema.safeParse(data)
   if (!result.success) {
     console.error('[Interpreter] Schema validation failed:', result.error.issues)
-    throw new Error(`Interpreter output validation failed: ${JSON.stringify(result.error.issues)}`)
+    console.error('[Interpreter] Raw keys received:', Object.keys(data))
+    console.warn('[Interpreter] Returning raw data despite validation failure')
+    return data
   }
 
   return result.data

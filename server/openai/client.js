@@ -19,7 +19,7 @@ export async function callStructured({ systemPrompt, userPrompt, schemaName = 'r
       const response = await client.chat.completions.create({
         model: MODEL,
         temperature: 0.7,
-        max_tokens: 4096,
+        max_tokens: 8192,
         response_format: { type: 'json_object' },
         messages: [
           { role: 'system', content: systemPrompt },

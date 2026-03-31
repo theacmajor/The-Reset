@@ -45,23 +45,46 @@ export const BlueprintDataSchema = z.object({
     targetIncome:  z.string(),
     generatedOn:   z.string(),
   }),
-  positioning: z.object({
-    superpowerLabel:       z.string(),
-    positioningStatement:  z.string(),
+  superpower: z.object({
+    label:   z.string(),   // 2-4 words — their core edge
+    summary: z.string(),   // 1 short line — why this is their edge
   }),
-  strengths:        z.array(z.string()),
-  weaknesses:       z.array(z.string()),
-  weaknessToAction: z.array(z.object({
-    weakness: z.string(),
-    action:   z.string(),
+  positioning: z.object({
+    headline: z.string(),  // short, human, memorable positioning line
+  }),
+  brutalTruth: z.object({
+    strength: z.string(),  // line 1: what they're strong at
+    gap:      z.string(),  // line 2: what's actually holding them back
+  }),
+  strengths: z.array(z.string()),
+  gapActionSystem: z.array(z.object({
+    gap:    z.string(),   // gap name
+    truth:  z.string(),   // short line — the real problem
+    action: z.string(),   // short line — what to do next
   })),
-  caseStudyStack:     z.array(z.string()),
-  thingsToShow:       z.array(z.string()),
-  learningRoadmap:    z.array(z.string()),
-  portfolioStructure: z.array(z.string()),
-  finalStatement:     z.string(),
-  archetype:          z.string(),
-  tagline:            z.string(),
+  caseStudyDirection: z.object({
+    summary:     z.string(),            // 1 conversational line
+    proofBlocks: z.array(z.object({     // 2-3 blocks: what work should prove
+      title: z.string(),
+      detail: z.string(),
+    })),
+    mustInclude: z.array(z.string()),   // chips: what to include inside
+  }),
+  portfolioDirection: z.object({
+    summary:    z.string(),            // 1 short advice line
+    priorities: z.array(z.string()),   // 3 short emphasis chips
+  }),
+  learningRoadmap: z.array(z.object({
+    focus:   z.string(),   // topic name
+    summary: z.string(),   // 1 short line
+  })),
+  startHere: z.array(z.object({  // exactly 3 action cards
+    title:  z.string(),          // short action title
+    detail: z.string(),          // 1 supporting line
+  })),
+  finalStatement: z.string(),
+  archetype:      z.string(),
+  tagline:        z.string(),
 })
 
 // ─── Derived Signals (deterministic pre-processing) ──────────────────────────

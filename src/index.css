@@ -81,7 +81,15 @@
   }
 }
 
+/* ── Book page scrollbar ───────────────────────────────────── */
+.book-page::-webkit-scrollbar { width: 4px; }
+.book-page::-webkit-scrollbar-track { background: transparent; }
+.book-page::-webkit-scrollbar-thumb { background: #D8D4CE; border-radius: 4px; }
+.book-page::-webkit-scrollbar-thumb:hover { background: #C8C4BC; }
+.book-page { scrollbar-width: thin; scrollbar-color: #D8D4CE transparent; }
+
 @media print {
   body, #root { background: white !important; border: none !important; }
   .no-print   { display: none !important; }
+  .book-page  { overflow: visible !important; }
 }
