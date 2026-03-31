@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --black:  #0D0D0D;
+    --white:  #FAFAFA;
+    --off:    #F2F1EE;
+    --gray:   #6B6B6B;
+    --light:  #DDDBD7;
+    --red:    #D42020;
+    --border: 1px solid #0D0D0D;
+  }
+
+  :root {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #2A4A3A;
+    color: var(--black);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    width: 100%;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+
+  /* Buttons feel responsive */
+  button { transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1); }
+  button:active { transform: scale(0.97); }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ── Typography helpers ─────────────────────────────────────── */
+.f-barlow  { font-family: 'Barlow', sans-serif; }
+.f-mono    { font-family: 'JetBrains Mono', monospace; }
+.f-inter   { font-family: 'Inter', sans-serif; }
+
+/* ── Grid borders ───────────────────────────────────────────── */
+.b  { border: var(--border); }
+.bt { border-top: var(--border); }
+.bb { border-bottom: var(--border); }
+.bl { border-left: var(--border); }
+.br { border-right: var(--border); }
+
+/* ── Inverted cell ──────────────────────────────────────────── */
+.inv { background: var(--black); color: var(--white); }
+.inv .gray-txt { color: #888; }
+
+/* ── Red accent ─────────────────────────────────────────────── */
+.red-txt   { color: var(--red); }
+.red-bg    { background: var(--red); color: var(--white); }
+.red-b     { border-color: var(--red) !important; }
+
+/* ── Intro CTA button ──────────────────────────────────────── */
+@media (hover: hover) and (pointer: fine) {
+  .intro-cta:hover {
+    background: #1A1815 !important;
+  }
+  .intro-cta:hover .intro-arrow {
+    transform: translateX(3px);
+  }
+}
+
+@media print {
+  body, #root { background: white !important; border: none !important; }
+  .no-print   { display: none !important; }
+}
