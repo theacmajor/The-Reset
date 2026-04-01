@@ -105,8 +105,8 @@ const FEATURES = [
   },
   {
     tag: 'The End',
-    title: 'Built in one session',
-    body: 'No Figma. No PRD. No sprint planning. Just a clear vision, fast iteration, and the willingness to kill what doesn\'t work. That\'s The Reset.',
+    title: 'Built in 3 sleepless nights',
+    body: 'No Figma. No PRD. No sprint planning. Three days, no sleep, just a clear vision and the willingness to kill what doesn\'t work. That\'s The Reset.',
     type: 'full',
     isEnd: true,
   },
@@ -230,7 +230,7 @@ export default function FeaturesPage() {
               fontFamily: "'Instrument Serif', serif",
               fontSize: 20, lineHeight: 1.4, color: '#8A8580',
             }}>
-              Every feature, every setback. One session.
+              Every feature, every setback. Three sleepless nights.
             </p>
           </div>
 
