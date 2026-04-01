@@ -130,7 +130,8 @@ function IntroScreen({ onStart }) {
         </div>
         <p style={{
           fontFamily: 'Inter, sans-serif',
-          fontSize: 12, color: 'rgba(138,133,128,0.5)',
+          fontSize: 13, color: 'rgba(138,133,128,0.5)',
+          letterSpacing: '-0.02em',
           textAlign: 'left',
           padding: '6px 0 0',
         }}>
