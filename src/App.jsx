@@ -4,7 +4,7 @@ import BlueprintPage from './components/BlueprintPage'
 import { AuthProvider, useAuth } from './lib/AuthContext'
 import { signOut } from 'firebase/auth'
 import { auth } from './lib/firebase'
-import { Agentation } from 'agentation'
+
 import MusicToggle from './components/MusicToggle'
 import './index.css'
 
@@ -225,7 +225,9 @@ function AppInner() {
       <div className="mobile-only" style={{
         display: 'none',
         position: 'fixed', inset: 0, zIndex: 99999,
-        background: '#fff',
+        backgroundImage: 'url(/Main%20image.png)',
+        backgroundSize: 'cover', backgroundPosition: 'center',
+        backgroundColor: '#fff',
         alignItems: 'center', justifyContent: 'center',
         padding: 32,
       }}>
@@ -275,7 +277,6 @@ function AppInner() {
         pointerEvents: curtain ? 'all' : 'none',
         transition: `opacity 0.4s ${EASE_OUT}`,
       }} />
-      <Agentation />
     </>
   )
 }
