@@ -192,7 +192,7 @@ export default function AdminDashboard() {
       {/* Main card */}
       <div style={{
         flex: 1, minHeight: 0,
-        maxWidth: 1100, width: '100%',
+        maxWidth: 1400, width: '100%',
         margin: '0 auto',
         padding: '0 24px 24px',
       }}>
@@ -289,75 +289,114 @@ export default function AdminDashboard() {
 
               {/* Table view */}
               {tab === 'table' && submissions && (
-                <div style={{ flex: 1, minHeight: 0 }}>
-                  {/* Table header */}
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1.5fr 1.5fr 1fr 1fr 1fr 1.2fr',
-                    gap: 1, padding: '10px 14px',
-                    borderBottom: '2px solid #0D0D0D',
-                    position: 'sticky', top: 0, background: '#fff', zIndex: 2,
-                  }}>
-                    {['Name', 'Email', 'Date', 'Current', 'Target', 'Archetype'].map(h => (
-                      <span key={h} style={{
-                        fontFamily: 'Inter, sans-serif', fontSize: 10, fontWeight: 600,
-                        color: '#B5B0AB', textTransform: 'uppercase', letterSpacing: '0.06em',
-                      }}>{h}</span>
-                    ))}
-                  </div>
-
-                  {/* Rows */}
-                  {submissions.map((s, idx) => (
-                    <div key={s.id || idx}>
-                      <div
-                        onClick={() => setExpandedRow(expandedRow === idx ? null : idx)}
-                        style={{
-                          display: 'grid',
-                          gridTemplateColumns: '1.5fr 1.5fr 1fr 1fr 1fr 1.2fr',
-                          gap: 1, padding: '12px 14px',
-                          borderBottom: '1px solid #F0EEEB',
-                          cursor: 'pointer',
-                          background: expandedRow === idx ? '#FAFAF8' : 'transparent',
-                          transition: `background 0.15s ${EASE}`,
-                        }}
-                      >
-                        <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, fontWeight: 500, color: '#0D0D0D' }}>{s.name}</span>
-                        <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, color: '#999', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.email || 'N/A'}</span>
-                        <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, color: '#999' }}>{s.createdAt ? new Date(s.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : 'N/A'}</span>
-                        <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, color: '#777' }}>{s.answers?.currentSalary || 'N/A'}</span>
-                        <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, color: '#777' }}>{s.answers?.targetSalary || 'N/A'}</span>
-                        <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, color: '#999' }}>{s.profile?.primaryArchetype || 'N/A'}</span>
-                      </div>
-
-                      {/* Expanded details */}
-                      {expandedRow === idx && (
-                        <div style={{
-                          padding: '16px 14px 20px',
-                          background: '#FAFAF8',
-                          borderBottom: '1px solid #F0EEEB',
-                          display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12,
-                        }}>
-                          {Object.entries(QUESTION_LABELS).map(([key, label]) => {
-                            const val = s.answers?.[key]
-                            return (
-                              <div key={key}>
-                                <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 10, fontWeight: 600, color: '#B5B0AB', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: 4 }}>{label}</span>
-                                <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, color: '#555' }}>
-                                  {Array.isArray(val) ? val.join(', ') : val || 'N/A'}
-                                </span>
-                              </div>
-                            )
-                          })}
-                        </div>
-                      )}
+                <div style={{ flex: 1, minHeight: 0, overflowX: 'auto' }}>
+                  <div style={{ minWidth: 1100 }}>
+                    {/* Table header */}
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: '120px 160px 70px 90px 90px 80px 120px 1fr 1fr 140px',
+                      gap: 8, padding: '10px 14px',
+                      borderBottom: '2px solid #0D0D0D',
+                      position: 'sticky', top: 0, background: '#fff', zIndex: 2,
+                    }}>
+                      {['Name', 'Email', 'Date', 'Current', 'Target', 'Role', 'Target Role', 'Strengths', 'Gaps', 'Archetype'].map(h => (
+                        <span key={h} style={{
+                          fontFamily: 'Inter, sans-serif', fontSize: 10, fontWeight: 600,
+                          color: '#B5B0AB', textTransform: 'uppercase', letterSpacing: '0.06em',
+                        }}>{h}</span>
+                      ))}
                     </div>
-                  ))}
 
-                  {submissions.length === 0 && (
-                    <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, color: '#B5B0AB', textAlign: 'center', padding: 40 }}>
-                      No submissions yet
-                    </p>
-                  )}
+                    {/* Rows */}
+                    {submissions.map((s, idx) => {
+                      const cell = { fontFamily: 'Inter, sans-serif', fontSize: 12, color: '#777', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }
+                      const chip = { display: 'inline-block', padding: '2px 6px', borderRadius: 4, background: '#F0EEEB', fontFamily: 'Inter, sans-serif', fontSize: 10, color: '#555', marginRight: 3, marginBottom: 3, whiteSpace: 'nowrap' }
+                      return (
+                        <div key={s.id || idx}>
+                          <div
+                            onClick={() => setExpandedRow(expandedRow === idx ? null : idx)}
+                            style={{
+                              display: 'grid',
+                              gridTemplateColumns: '120px 160px 70px 90px 90px 80px 120px 1fr 1fr 140px',
+                              gap: 8, padding: '10px 14px',
+                              borderBottom: '1px solid #F0EEEB',
+                              cursor: 'pointer',
+                              background: expandedRow === idx ? '#FAFAF8' : 'transparent',
+                              transition: `background 0.15s ${EASE}`,
+                              alignItems: 'start',
+                            }}
+                          >
+                            <span style={{ ...cell, fontWeight: 500, color: '#0D0D0D', fontSize: 13 }}>{s.name}</span>
+                            <span style={{ ...cell, color: '#999' }}>{s.email || 'N/A'}</span>
+                            <span style={cell}>{s.createdAt ? new Date(s.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : 'N/A'}</span>
+                            <span style={cell}>{s.answers?.currentSalary || 'N/A'}</span>
+                            <span style={cell}>{s.answers?.targetSalary || 'N/A'}</span>
+                            <span style={cell}>{s.answers?.journeyState || 'N/A'}</span>
+                            <span style={cell}>{s.answers?.targetRole || 'N/A'}</span>
+                            <div style={{ overflow: 'hidden', lineHeight: 1.6 }}>
+                              {(s.answers?.strengths || []).slice(0, 3).map(st => (
+                                <span key={st} style={chip}>{st}</span>
+                              ))}
+                              {(s.answers?.strengths || []).length > 3 && <span style={{ ...chip, background: 'none', color: '#B5B0AB' }}>+{s.answers.strengths.length - 3}</span>}
+                            </div>
+                            <div style={{ overflow: 'hidden', lineHeight: 1.6 }}>
+                              {(s.answers?.weaknesses || []).slice(0, 3).map(w => (
+                                <span key={w} style={{ ...chip, background: '#FFF0F0', color: '#D42020' }}>{w}</span>
+                              ))}
+                              {(s.answers?.weaknesses || []).length > 3 && <span style={{ ...chip, background: 'none', color: '#B5B0AB' }}>+{s.answers.weaknesses.length - 3}</span>}
+                            </div>
+                            <span style={{ ...cell, fontSize: 11, color: '#999' }}>{s.profile?.primaryArchetype || 'N/A'}</span>
+                          </div>
+
+                          {/* Expanded details */}
+                          {expandedRow === idx && (
+                            <div style={{
+                              padding: '16px 14px 20px',
+                              background: '#FAFAF8',
+                              borderBottom: '1px solid #F0EEEB',
+                              display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 16,
+                            }}>
+                              {Object.entries(QUESTION_LABELS).map(([key, label]) => {
+                                const val = s.answers?.[key]
+                                return (
+                                  <div key={key}>
+                                    <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 10, fontWeight: 600, color: '#B5B0AB', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: 6 }}>{label}</span>
+                                    <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, color: '#555', lineHeight: 1.4, display: 'block' }}>
+                                      {Array.isArray(val) ? val.join(', ') : val || 'N/A'}
+                                    </span>
+                                  </div>
+                                )
+                              })}
+                              {s.signals && (
+                                <>
+                                  <div>
+                                    <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 10, fontWeight: 600, color: '#B5B0AB', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: 6 }}>Urgency</span>
+                                    <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, color: s.signals.urgency === 'extreme' ? '#D42020' : '#555', fontWeight: 500 }}>{s.signals.urgency} ({s.signals.incomeGapMultiple}x gap)</span>
+                                  </div>
+                                  <div>
+                                    <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 10, fontWeight: 600, color: '#B5B0AB', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: 6 }}>Tendency</span>
+                                    <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, color: '#555' }}>{s.signals.tendency}</span>
+                                  </div>
+                                </>
+                              )}
+                              {s.profile?.currentLevelSummary && (
+                                <div style={{ gridColumn: 'span 2' }}>
+                                  <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 10, fontWeight: 600, color: '#B5B0AB', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: 6 }}>AI Summary</span>
+                                  <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, color: '#555', lineHeight: 1.4, display: 'block' }}>{s.profile.currentLevelSummary}</span>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )
+                    })}
+
+                    {submissions.length === 0 && (
+                      <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, color: '#B5B0AB', textAlign: 'center', padding: 40 }}>
+                        No submissions yet
+                      </p>
+                    )}
+                  </div>
                 </div>
               )}
 
