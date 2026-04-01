@@ -3,76 +3,112 @@ import { Link } from 'react-router-dom'
 
 const EASE = 'cubic-bezier(0.23, 1, 0.32, 1)'
 
-const CHAPTERS = [
+const FEATURES = [
   {
-    tag: 'The Beginning',
-    title: 'Why I built The Reset',
-    body: `I kept seeing the same pattern — talented designers stuck in loops. Great craft, but no direction. Beautiful portfolios that said nothing. Salary complaints with no strategy behind them.\n\nI wanted to build something that didn't just motivate people — it actually told them what to do next. Not a course. Not a community. Just a sharp, honest blueprint built from their real answers.`,
+    tag: 'Why',
+    title: 'Designers are stuck in loops',
+    body: 'Great craft, no direction. Beautiful portfolios that say nothing. I wanted to build something that tells you what to do next.',
+    type: 'full',
   },
   {
-    tag: 'Chapter 01',
-    title: 'The Questionnaire',
-    body: `Started with 10 carefully chosen questions. Not generic career-quiz stuff — real questions that expose where someone actually is. Current salary, target salary, strengths, gaps, what kind of work they've done.\n\nEach answer feeds into a rules engine that computes signals before the AI even touches it. Income gap multiplier, craft vs thinking tendency, proof gaps. Deterministic logic first, AI second.`,
+    tag: 'Questionnaire',
+    title: '10 sharp questions',
+    body: 'Not generic career quiz stuff. Real questions that expose where you actually are.',
+    type: 'third',
   },
   {
-    tag: 'Chapter 02',
-    title: 'The AI Pipeline',
-    body: `Two-step AI system. Step one: interpret the raw answers into a structured career profile — archetype classification, bottleneck identification, positioning direction. Step two: generate the actual blueprint content from that profile.\n\nBuilt 8 designer archetypes from scratch. Visual-first, craft-led, motion-first, brand-to-digital, UX generalist, product-no-business, research-heavy, multi-creative. Each has specific traits, common weaknesses, and learning priorities.`,
+    tag: 'Rules Engine',
+    title: 'Deterministic signals first',
+    body: 'Income gap multiplier, craft vs thinking tendency, proof gaps. Hard logic before AI.',
+    type: 'third',
   },
   {
-    tag: 'Chapter 03',
-    title: 'The Blueprint — Open Book Layout',
-    body: `The output needed to feel like something you'd pin on your wall, not a generic PDF. So I built an open-book layout — two pages side by side with a spine and chrome ring binders.\n\nLeft page: your identity — name, superpower, strengths, gaps, learning roadmap. Right page: your direction — positioning, blind spots, case study guidance, portfolio priorities, and three concrete "start here" actions.`,
+    tag: 'AI Pipeline',
+    title: 'Two step generation',
+    body: 'Step one interprets your answers into a career profile. Step two generates the blueprint from it.',
+    type: 'third',
+  },
+  {
+    tag: 'Blueprint',
+    title: 'Open book layout',
+    body: 'Two pages side by side with a spine and chrome ring binders. Left page is your identity. Right page is your direction. Felt like something you\'d pin on your wall.',
+    type: 'full',
   },
   {
     tag: 'Setback',
-    title: 'The book animation that never worked',
-    body: `I originally designed a front cover that flipped open like a real book using CSS 3D transforms. Cover on the right, flips left with a 2.5-second animation, revealing both pages underneath.\n\nIt never worked properly. The right page content kept hiding behind the flipped cover due to 3D stacking context issues. Spent hours debugging z-index, translateZ, preserve-3d. In the end, I killed it. Removed the cover, removed the flip. Just showed the open book directly.\n\nSometimes the best design decision is deletion.`,
-  },
-  {
-    tag: 'Chapter 04',
-    title: 'Firebase Authentication',
-    body: `Added Google Sign-In so people can save their blueprints. But I didn't want a separate sign-in page breaking the flow. So I embedded it right inside the questionnaire card — before the first question.\n\nSign in with Google, your name auto-fills from your account, and you're immediately on question one. Seamless. If you're already signed in, you skip straight to the questions.`,
+    title: 'The book flip animation',
+    body: 'Built a 3D cover that flipped open. CSS transforms, preserve-3d, translateZ. Never worked. Killed it. Sometimes deletion is the best design decision.',
+    type: 'half',
+    isSetback: true,
   },
   {
     tag: 'Setback',
-    title: 'Supabase ran out of projects',
-    body: `Originally built auth with Supabase. Hit the free-tier project limit. Had to rip it all out and switch to Firebase in the same session. Firebase Auth is completely free for Google Sign-In — no project limits, no MAU caps. Should've started there.`,
+    title: 'Supabase ran out',
+    body: 'Hit the free tier project limit. Ripped it out, switched to Firebase in the same session. Should\'ve started there.',
+    type: 'half',
+    isSetback: true,
   },
   {
-    tag: 'Chapter 05',
-    title: 'Photo Upload',
-    body: `Added a photo upload question before the reality check. Your photo appears on the blueprint's polaroid — taped at an angle with a washi-tape effect.\n\nIf you skip the photo, it falls back to the default landscape. There's also a camera icon on the blueprint itself so you can change your photo after generation. 2MB limit with instant validation.`,
+    tag: 'Auth',
+    title: 'Google Sign In',
+    body: 'Embedded inside the questionnaire card, not a separate page. Sign in, name auto fills, you\'re on question one.',
+    type: 'third',
   },
   {
-    tag: 'Chapter 06',
+    tag: 'Upload',
+    title: 'Your photo on the blueprint',
+    body: 'Upload a photo, it appears on the polaroid. Skip it, get the default landscape.',
+    type: 'third',
+  },
+  {
+    tag: 'Export',
     title: 'Download as PNG',
-    body: `"Download Blueprint" captures the entire book as a high-res PNG using html-to-image. Runs toPng twice — first pass warms up image caching, second pass captures correctly. A known quirk with data URLs.\n\nHides all UI buttons (download, retake, camera icon) before capture, restores them after. The exported image is clean — just the book with the warm paper background.`,
+    body: 'High res capture with html-to-image. Runs twice to warm up image caching.',
+    type: 'third',
   },
   {
     tag: 'Setback',
-    title: 'The download that kept breaking',
-    body: `The book uses flex layouts with overflow: hidden and 100vh height constraints everywhere. First attempt captured only the visible viewport — half the content missing. Tried expanding containers, restoring styles after — the rollback kept failing, breaking button layouts.\n\nEventually simplified: just capture the book interior element directly with a solid background color. No DOM manipulation needed. Sometimes the fix is using a smaller scope, not a bigger one.`,
+    title: 'Download kept breaking',
+    body: 'Flex layouts with overflow hidden clipped the content. Style rollbacks broke buttons. Fixed by capturing a smaller scope.',
+    type: 'full',
+    isSetback: true,
   },
   {
-    tag: 'Chapter 07',
-    title: 'The Details',
-    body: `Ambient music that only plays after you click "Let's start" — fades in to 40% volume. Staggered fade-up animations on every section of the blueprint. Chrome ring binders on the book spine. Progressive blur overlays on backgrounds.\n\nLine height tuning across every card. Breathing space between sections. Proof block cards, portfolio priority chips, numbered "start here" action cards. Every pixel intentional.`,
+    tag: 'Sound',
+    title: 'Ambient music',
+    body: 'Plays only after Let\'s start. Fades in to 40%.',
+    type: 'third',
   },
   {
-    tag: 'Chapter 08',
+    tag: 'Animation',
+    title: 'Staggered reveals',
+    body: 'Every section fades up with blur and scale. Cascading delays across both pages.',
+    type: 'third',
+  },
+  {
+    tag: 'Deploy',
     title: 'Serverless on Vercel',
-    body: `The Express server with SQLite couldn't run on Vercel. Ported the entire AI pipeline — rules engine, interpreter, blueprint generator — into a single serverless function.\n\nStateless. No database. The function receives questionnaire answers, runs both AI calls, and returns the blueprint. 60-second timeout for the two OpenAI round-trips.`,
+    body: 'Ported the Express + SQLite pipeline into a single stateless function.',
+    type: 'third',
   },
   {
-    tag: 'Chapter 09',
-    title: 'Mobile & Performance',
-    body: `Added a mobile gate — a centered message on the background image telling users to switch to desktop for the full experience. The blueprint layout simply doesn't work on mobile and I'd rather be honest about it than ship a broken responsive version.\n\nPreloaded all images and audio in the HTML head. Compressed images (2.9MB → 1.7MB, 1.2MB → 73KB) and converted the 9.3MB MP3 to a 3.6MB M4A. Every byte matters.`,
+    tag: 'Mobile',
+    title: 'Honest about limits',
+    body: 'The blueprint doesn\'t work on mobile. Instead of shipping a broken responsive version, I show a message asking to switch to desktop.',
+    type: 'half',
+  },
+  {
+    tag: 'Performance',
+    title: 'Every byte matters',
+    body: 'Compressed images from 6.4MB to 3MB total. Converted 9.3MB MP3 to 3.6MB M4A. Preloaded everything in HTML head.',
+    type: 'half',
   },
   {
     tag: 'The End',
     title: 'Built in one session',
-    body: `The entire thing — questionnaire, AI pipeline, blueprint layout, authentication, photo upload, download, animations, deployment — built in a single session with Claude Code.\n\nNo Figma file. No PRD. No sprint planning. Just a clear vision, fast iteration, and the willingness to kill what doesn't work.\n\nThat's The Reset.`,
+    body: 'No Figma. No PRD. No sprint planning. Just a clear vision, fast iteration, and the willingness to kill what doesn\'t work. That\'s The Reset.',
+    type: 'full',
+    isEnd: true,
   },
 ]
 
@@ -80,7 +116,41 @@ export default function FeaturesPage() {
   const [show, setShow] = useState(false)
   useEffect(() => {
     requestAnimationFrame(() => requestAnimationFrame(() => setShow(true)))
+    window.scrollTo(0, 0)
   }, [])
+
+  const anim = (delay) => ({
+    opacity: show ? 1 : 0,
+    transform: show ? 'translateY(0)' : 'translateY(10px)',
+    transition: `opacity 0.5s ${EASE} ${delay}s, transform 0.5s ${EASE} ${delay}s`,
+  })
+
+  // Group features into rows
+  const rows = []
+  let i = 0
+  while (i < FEATURES.length) {
+    const f = FEATURES[i]
+    if (f.type === 'full') {
+      rows.push([f])
+      i++
+    } else if (f.type === 'half') {
+      const pair = [f]
+      if (i + 1 < FEATURES.length && FEATURES[i + 1].type === 'half') pair.push(FEATURES[++i])
+      rows.push(pair)
+      i++
+    } else if (f.type === 'third') {
+      const trio = [f]
+      if (i + 1 < FEATURES.length && FEATURES[i + 1].type === 'third') trio.push(FEATURES[++i])
+      if (i + 1 < FEATURES.length && FEATURES[i + 1].type === 'third') trio.push(FEATURES[++i])
+      rows.push(trio)
+      i++
+    } else {
+      rows.push([f])
+      i++
+    }
+  }
+
+  let itemIdx = 0
 
   return (
     <div style={{
@@ -109,10 +179,7 @@ export default function FeaturesPage() {
         <Link to="/" style={{
           fontFamily: "'Instrument Serif', serif",
           fontSize: 28, color: '#fff', textDecoration: 'none',
-          letterSpacing: '-0.01em',
-          opacity: show ? 1 : 0,
-          transform: show ? 'translateY(0)' : 'translateY(8px)',
-          transition: `opacity 0.5s ${EASE} 0.1s, transform 0.5s ${EASE} 0.1s`,
+          letterSpacing: '-0.01em', ...anim(0.1),
         }}>
           The Reset
         </Link>
@@ -123,114 +190,112 @@ export default function FeaturesPage() {
           border: '1px solid rgba(255,255,255,0.2)',
           background: 'rgba(255,255,255,0.08)',
           backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-          opacity: show ? 1 : 0,
-          transition: `opacity 0.5s ${EASE} 0.2s`,
+          ...anim(0.2),
         }}>
           Take the quiz
         </Link>
       </div>
 
-      {/* Content */}
+      {/* Main card */}
       <div style={{
-        maxWidth: 720,
+        maxWidth: 900,
         margin: '0 auto',
         padding: '20px 24px 80px',
       }}>
-        {/* Hero */}
         <div style={{
           background: '#fff',
           borderRadius: 20,
-          padding: '56px 48px',
-          marginBottom: 24,
+          padding: '52px 48px',
           boxShadow: '0 12px 40px rgba(0,0,0,0.1)',
-          opacity: show ? 1 : 0,
-          transform: show ? 'translateY(0)' : 'translateY(16px)',
-          transition: `opacity 0.6s ${EASE} 0.15s, transform 0.6s ${EASE} 0.15s`,
+          ...anim(0.15),
         }}>
-          <span style={{
-            fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 600,
-            color: '#B5B0AB', textTransform: 'uppercase', letterSpacing: '0.08em',
-            display: 'block', marginBottom: 16,
-          }}>
-            Build Log
-          </span>
-          <h1 style={{
-            fontFamily: "'Instrument Serif', serif", fontWeight: 400,
-            fontSize: 'clamp(36px, 5vw, 52px)',
-            lineHeight: 1.1, letterSpacing: '-0.02em',
-            color: '#0D0D0D', marginBottom: 16,
-          }}>
-            How The Reset was built
-          </h1>
-          <p style={{
-            fontFamily: "'Instrument Serif', serif",
-            fontSize: 22, lineHeight: 1.4,
-            color: '#8A8580',
-          }}>
-            Every feature, every setback, every decision — from the first commit to deployment. Built in one session.
-          </p>
-        </div>
-
-        {/* Chapter cards */}
-        {CHAPTERS.map((ch, i) => {
-          const isSetback = ch.tag === 'Setback'
-          const isBookend = ch.tag === 'The Beginning' || ch.tag === 'The End'
-          const delay = 0.25 + i * 0.04
-
-          return (
-            <div key={i} style={{
-              background: isSetback ? '#FAFAF8' : '#fff',
-              borderRadius: 16,
-              padding: '40px 44px',
-              marginBottom: 16,
-              boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
-              borderLeft: isSetback ? '3px solid #D42020' : isBookend ? '3px solid #0D0D0D' : 'none',
-              opacity: show ? 1 : 0,
-              transform: show ? 'translateY(0)' : 'translateY(12px)',
-              transition: `opacity 0.5s ${EASE} ${delay}s, transform 0.5s ${EASE} ${delay}s`,
+          {/* Hero */}
+          <div style={{ marginBottom: 44 }}>
+            <span style={{
+              fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 600,
+              color: '#B5B0AB', textTransform: 'uppercase', letterSpacing: '0.08em',
+              display: 'block', marginBottom: 14,
             }}>
-              <span style={{
-                fontFamily: 'Inter, sans-serif', fontSize: 10, fontWeight: 600,
-                color: isSetback ? '#D42020' : '#B5B0AB',
-                textTransform: 'uppercase', letterSpacing: '0.1em',
-                display: 'block', marginBottom: 12,
+              Build Log
+            </span>
+            <h1 style={{
+              fontFamily: "'Instrument Serif', serif", fontWeight: 400,
+              fontSize: 'clamp(36px, 5vw, 48px)',
+              lineHeight: 1.1, letterSpacing: '-0.02em',
+              color: '#0D0D0D', marginBottom: 12,
+            }}>
+              How The Reset was built
+            </h1>
+            <p style={{
+              fontFamily: "'Instrument Serif', serif",
+              fontSize: 20, lineHeight: 1.4, color: '#8A8580',
+            }}>
+              Every feature, every setback. One session.
+            </p>
+          </div>
+
+          {/* Feature blocks */}
+          {rows.map((row, rIdx) => {
+            return (
+              <div key={rIdx} style={{
+                display: 'flex', gap: 12,
+                marginBottom: 12,
               }}>
-                {ch.tag}
-              </span>
-              <h2 style={{
-                fontFamily: "'Instrument Serif', serif", fontWeight: 400,
-                fontSize: isBookend ? 32 : 26,
-                lineHeight: 1.15, letterSpacing: '-0.02em',
-                color: '#0D0D0D', marginBottom: 14,
-              }}>
-                {ch.title}
-              </h2>
-              {ch.body.split('\n\n').map((para, j) => (
-                <p key={j} style={{
-                  fontFamily: 'Inter, sans-serif', fontWeight: 400,
-                  fontSize: 15, lineHeight: 1.6,
-                  color: '#555', letterSpacing: '-0.01em',
-                  marginBottom: j < ch.body.split('\n\n').length - 1 ? 14 : 0,
-                }}>
-                  {para}
-                </p>
-              ))}
-            </div>
-          )
-        })}
+                {row.map((f) => {
+                  const idx = itemIdx++
+                  const delay = 0.2 + idx * 0.03
+                  return (
+                    <div key={idx} style={{
+                      flex: 1,
+                      padding: '24px 26px',
+                      borderRadius: 12,
+                      background: f.isSetback ? '#FDFBF9' : '#F9F8F6',
+                      borderLeft: f.isSetback ? '3px solid #D42020' : f.isEnd ? '3px solid #0D0D0D' : 'none',
+                      ...anim(delay),
+                    }}>
+                      <span style={{
+                        fontFamily: 'Inter, sans-serif', fontSize: 10, fontWeight: 600,
+                        color: f.isSetback ? '#D42020' : '#C8C4BC',
+                        textTransform: 'uppercase', letterSpacing: '0.08em',
+                        display: 'block', marginBottom: 8,
+                      }}>
+                        {f.tag}
+                      </span>
+                      <h3 style={{
+                        fontFamily: "'Instrument Serif', serif", fontWeight: 400,
+                        fontSize: f.type === 'full' || f.isEnd ? 24 : 19,
+                        lineHeight: 1.15, letterSpacing: '-0.02em',
+                        color: '#0D0D0D', marginBottom: 8,
+                      }}>
+                        {f.title}
+                      </h3>
+                      <p style={{
+                        fontFamily: 'Inter, sans-serif', fontWeight: 400,
+                        fontSize: 13, lineHeight: 1.5,
+                        color: '#777', letterSpacing: '-0.01em',
+                        margin: 0,
+                      }}>
+                        {f.body}
+                      </p>
+                    </div>
+                  )
+                })}
+              </div>
+            )
+          })}
+        </div>
 
         {/* Footer */}
         <div style={{
-          textAlign: 'center', padding: '40px 0 20px',
-          opacity: show ? 1 : 0,
-          transition: `opacity 0.5s ${EASE} 1s`,
+          textAlign: 'center', padding: '36px 0 20px',
+          ...anim(0.8),
         }}>
           <Link to="/" style={{
             fontFamily: "'Instrument Serif', serif",
             fontSize: 20, color: '#fff', textDecoration: 'none',
             opacity: 0.8,
           }}>
-            Take the quiz →
+            Take the quiz
           </Link>
         </div>
       </div>
