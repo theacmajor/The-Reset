@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react'
 import Questionnaire from './components/Questionnaire'
 import BlueprintPage from './components/BlueprintPage'
-// import { Agentation } from 'agentation'
+import { AuthProvider, useAuth } from './lib/AuthContext'
+import { signOut } from 'firebase/auth'
+import { auth } from './lib/firebase'
+import { Agentation } from 'agentation'
 import MusicToggle from './components/MusicToggle'
 import './index.css'
 
@@ -130,34 +133,110 @@ function IntroScreen({ onStart }) {
   )
 }
 
-export default function App() {
-  const [phase, setPhase] = useState('intro')
-  const [answers, setAnswers] = useState(null)
+const STORAGE_KEY = 'the-reset-blueprint'
+
+function loadSaved() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return null
+    return JSON.parse(raw)
+  } catch { return null }
+}
+
+function saveBlueprintData(data) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)) } catch {}
+}
+
+function clearBlueprintData() {
+  try { localStorage.removeItem(STORAGE_KEY) } catch {}
+}
+
+function AppInner() {
+  const user = useAuth()
+  const saved = loadSaved()
+  const [phase, setPhase] = useState(saved ? 'blueprint' : 'intro')
+  const [answers, setAnswers] = useState(saved)
   const [curtain, setCurtain] = useState(false)
+  const [musicStarted, setMusicStarted] = useState(false)
 
   const goTo = (next, data) => {
     setCurtain(true)
     setTimeout(() => {
       if (data !== undefined) setAnswers(data)
       setPhase(next)
-      // Small delay so new page mounts behind curtain
       setTimeout(() => setCurtain(false), 50)
     }, 400)
   }
 
+  // Still loading auth state
+  if (user === undefined) {
+    return (
+      <div style={{
+        minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        backgroundColor: '#fff',
+      }} />
+    )
+  }
+
   return (
     <>
-      <MusicToggle />
+      <MusicToggle shouldPlay={musicStarted} />
+      {user && phase !== 'blueprint' && (
+        <button
+          onClick={() => {
+            signOut(auth)
+            clearBlueprintData()
+            setAnswers(null)
+            setMusicStarted(false)
+            goTo('intro')
+          }}
+          style={{
+            position: 'fixed',
+            top: 24, right: 80,
+            zIndex: 9999,
+            height: 44,
+            padding: '0 16px',
+            borderRadius: 50,
+            border: '1px solid rgba(255,255,255,0.2)',
+            background: 'rgba(255,255,255,0.1)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            color: 'rgba(255,255,255,0.8)',
+            fontFamily: 'Inter, sans-serif',
+            fontWeight: 500,
+            fontSize: 12,
+            letterSpacing: '-0.02em',
+            cursor: 'pointer',
+            display: 'flex', alignItems: 'center', gap: 6,
+            transition: `border-color 0.2s ${EASE_OUT}, background 0.2s ${EASE_OUT}`,
+          }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'; e.currentTarget.style.background = 'rgba(255,255,255,0.18)' }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; e.currentTarget.style.background = 'rgba(255,255,255,0.1)' }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          Sign out
+        </button>
+      )}
       {phase === 'intro' && (
-        <IntroScreen onStart={() => goTo('questionnaire')} />
+        <IntroScreen onStart={() => { setMusicStarted(true); goTo('questionnaire') }} />
       )}
       {phase === 'questionnaire' && (
-        <Questionnaire onComplete={a => goTo('blueprint', a)} />
+        <Questionnaire user={user} onComplete={a => {
+          saveBlueprintData(a)
+          goTo('blueprint', a)
+        }} />
       )}
       {phase === 'blueprint' && (
         <BlueprintPage
           answers={answers}
-          onRestart={() => { setAnswers(null); goTo('intro') }}
+          onRestart={() => {
+            clearBlueprintData()
+            window.location.reload()
+          }}
         />
       )}
       {/* Curtain overlay — sits on top */}
@@ -168,7 +247,15 @@ export default function App() {
         pointerEvents: curtain ? 'all' : 'none',
         transition: `opacity 0.4s ${EASE_OUT}`,
       }} />
-      {/* <Agentation /> */}
+      <Agentation />
     </>
+  )
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppInner />
+    </AuthProvider>
   )
 }

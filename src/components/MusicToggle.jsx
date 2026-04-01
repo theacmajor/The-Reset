@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 const EASE = 'cubic-bezier(0.23, 1, 0.32, 1)'
 const FADE_MS = 800
 
-export default function MusicToggle() {
+export default function MusicToggle({ shouldPlay = false }) {
   const audioRef = useRef(null)
   const [playing, setPlaying] = useState(false)
   const [hover, setHover] = useState(false)
@@ -41,30 +41,22 @@ export default function MusicToggle() {
     return () => { audio.pause(); audio.src = '' }
   }, [])
 
-  // Auto-start on first user interaction anywhere on the page
+  // Start music when shouldPlay becomes true, reset when false
+  const hasStarted = useRef(false)
   useEffect(() => {
-    let started = false
-    const start = () => {
-      if (started) return
-      const a = audioRef.current
-      if (!a) return
-      a.play().then(() => {
-        started = true
-        fadeTo(0.4)
-        setPlaying(true)
-        cleanup()
-      }).catch(() => {})
+    if (!shouldPlay) {
+      hasStarted.current = false
+      return
     }
-    const cleanup = () => {
-      ['click', 'touchstart', 'keydown', 'scroll'].forEach(e =>
-        document.removeEventListener(e, start, true)
-      )
-    }
-    ['click', 'touchstart', 'keydown', 'scroll'].forEach(e =>
-      document.addEventListener(e, start, { capture: true, passive: true })
-    )
-    return cleanup
-  }, [fadeTo])
+    if (hasStarted.current) return
+    const a = audioRef.current
+    if (!a) return
+    a.play().then(() => {
+      hasStarted.current = true
+      fadeTo(0.4)
+      setPlaying(true)
+    }).catch(() => {})
+  }, [shouldPlay, fadeTo])
 
   const toggle = useCallback(() => {
     const audio = audioRef.current
@@ -106,6 +98,7 @@ export default function MusicToggle() {
       onMouseEnter={() => setHover(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      className="no-export"
       style={{
         position: 'fixed',
         top: 24, right: 28,

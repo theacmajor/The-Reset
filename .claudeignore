@@ -1,0 +1,18 @@
+# Large binary assets
+*.mp3
+*.mp4
+*.wav
+*.ogg
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.svg
+*.ico
+
+# Build output
+dist/
+
+# Dependencies
+node_modules/

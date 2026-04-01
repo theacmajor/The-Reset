@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { signInWithPopup } from 'firebase/auth'
+import { auth, googleProvider } from '../lib/firebase'
 
 // ─── Tokens ───────────────────────────────────────────────────────────────────
 const BLK     = '#0D0D0D'
@@ -132,6 +134,13 @@ const QUESTIONS = [
       'Branding Project', 'Design System', 'Personal Project',
       'Freelance Work', 'Client Work', 'Redesign Project',
     ],
+  },
+  // ── PHOTO ────────────────────────────────────────────────────────────────────
+  {
+    id: 'photo', section: 'direction',
+    q: "Add a photo for your blueprint",
+    helper: "This will appear on your blueprint. Max 2 MB.",
+    type: 'photo',
   },
   // ── REALITY ──────────────────────────────────────────────────────────────────
   {
@@ -777,22 +786,45 @@ function CompletionScreen({ onView, answers }) {
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
-export default function Questionnaire({ onComplete }) {
-  const [currentQ, setCurrentQ] = useState(0)
-  const [answers, setAnswers]   = useState({})
+export default function Questionnaire({ onComplete, user }) {
+  const [currentQ, setCurrentQ] = useState(user ? 0 : -1) // -1 = sign-in step
+  const [answers, setAnswers]   = useState(() => {
+    if (user?.displayName) {
+      return { name: user.displayName.split(' ')[0] }
+    }
+    return {}
+  })
   const [fading, setFading]     = useState(false)
   const [done, setDone]         = useState(false)
   const [loading, setLoading]   = useState(false)
   const [loadPct, setLoadPct]   = useState(0)
   const [loadReady, setLoadReady] = useState(false)
+  const [signingIn, setSigningIn] = useState(false)
   const inputRef = useRef(null)
   const cardRef  = useRef(null)
   const [entered, setEntered] = useState(false)
+
+  // When user signs in (from -1 step), auto-fill name and advance
+  const hasAutoAdvanced = useRef(false)
+  useEffect(() => {
+    if (user && currentQ === -1 && !hasAutoAdvanced.current) {
+      hasAutoAdvanced.current = true
+      const firstName = user.displayName?.split(' ')[0] || ''
+      if (firstName) setAnswers(prev => ({ ...prev, name: firstName }))
+      // Fade out sign-in, then swap to first question
+      setFading(true)
+      setTimeout(() => {
+        setCurrentQ(0)
+        setFading(false)
+      }, 300)
+    }
+  }, [user, currentQ])
 
   useEffect(() => {
     const t = setTimeout(() => setEntered(true), 50)
     return () => clearTimeout(t)
   }, [])
+
 
   // Loading: visual timer + real API call running in parallel
   const apiResultRef = useRef(null)
@@ -870,28 +902,32 @@ export default function Questionnaire({ onComplete }) {
   }, [loading, answers])
 
 
-  const q          = QUESTIONS[currentQ]
-  const sectionId  = q.section
+  const isSignIn = currentQ === -1
+  const q          = isSignIn ? null : QUESTIONS[currentQ]
+  const sectionId  = q?.section
 
-  const answer = answers[q.id]
+  const answer = q ? answers[q.id] : undefined
 
   const canProceed = () => {
+    if (isSignIn) return false
     if (q.type === 'text')
       return typeof answer === 'string' && answer.trim().length > 0
     if (q.type === 'searchable') {
       if (q.single) return typeof answer === 'string' && answer.trim().length > 0
       return Array.isArray(answer) && answer.length > 0
     }
+    if (q.type === 'photo')
+      return true // photo is optional
     if (q.type === 'reality-check')
       return !!(answer && answer.choice)
     return false
   }
 
   useEffect(() => {
-    if (q.type === 'text' && inputRef.current) {
+    if (q?.type === 'text' && inputRef.current) {
       setTimeout(() => inputRef.current?.focus(), 260)
     }
-  }, [currentQ, q.type])
+  }, [currentQ, q?.type])
 
 
   const animateCard = (changeFn) => {
@@ -944,8 +980,8 @@ export default function Questionnaire({ onComplete }) {
   // Global Enter key to advance — but not during animation or for single-select (which auto-advances)
   useEffect(() => {
     const onKey = e => {
-      if (e.key !== 'Enter' || e.repeat || loading || fading) return
-      if (q.type === 'searchable' && q.single) return // single-select auto-advances on pill click
+      if (e.key !== 'Enter' || e.repeat || loading || fading || isSignIn) return
+      if (q?.type === 'searchable' && q?.single) return // single-select auto-advances on pill click
       const el = e.target
       if (el.tagName === 'TEXTAREA') return
       if (el.tagName === 'INPUT' && el.placeholder?.includes('Search')) return
@@ -956,7 +992,7 @@ export default function Questionnaire({ onComplete }) {
     return () => document.removeEventListener('keydown', onKey)
   })
 
-  const setAnswer = val => setAnswers(p => ({ ...p, [q.id]: val }))
+  const setAnswer = val => q && setAnswers(p => ({ ...p, [q.id]: val }))
 
   const advancingRef = useRef(false)
 
@@ -1001,13 +1037,13 @@ export default function Questionnaire({ onComplete }) {
 
   if (done) return null
 
-  const selected = q.type === 'searchable'
+  const selected = q?.type === 'searchable'
     ? (q.single ? (answer ? [answer] : []) : (answer || []))
     : []
 
   return (
     <div style={{
-      minHeight: '100vh', position: 'relative', overflow: 'hidden',
+      minHeight: '100vh', position: 'relative',
       display: 'flex', flexDirection: 'column',
     }}>
       {/* ── Full-screen BG ── */}
@@ -1103,13 +1139,13 @@ export default function Questionnaire({ onComplete }) {
               background: '#fff',
               borderRadius: 16,
               boxShadow: '0 16px 48px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.06)',
-              overflow: 'hidden',
+              overflow: 'visible',
               display: 'flex', flexDirection: 'column',
-              minHeight: 500,
+              minHeight: (loading || isSignIn) ? 500 : undefined,
             }}>
 
-            {/* Progress bar + step count — hidden during loading */}
-            {!loading && (
+            {/* Progress bar + step count — hidden during loading and sign-in */}
+            {!loading && !isSignIn && (
               <div style={{ padding: '24px 28px 0' }}>
                 <div style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -1143,9 +1179,70 @@ export default function Questionnaire({ onComplete }) {
               </div>
             )}
 
-            <div style={{ padding: loading ? '28px 28px 28px' : '36px 28px 24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+            <div style={{ padding: (loading || isSignIn) ? '28px 28px 28px' : '36px 28px 24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
 
-            {loading ? (
+            {isSignIn ? (
+              <div style={{
+                flex: 1, display: 'flex', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'center',
+                textAlign: 'center', gap: 16, padding: '20px 8px',
+                opacity: fading ? 0 : 1,
+                transition: 'opacity 0.2s cubic-bezier(0.23,1,0.32,1)',
+              }}>
+                <style>{`
+                  @keyframes signInFadeUp {
+                    from { opacity: 0; transform: translateY(14px); filter: blur(5px); }
+                    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+                  }
+                `}</style>
+                <h2 style={{
+                  fontFamily: "'Instrument Serif', serif", fontWeight: 400,
+                  fontSize: 44, lineHeight: 1.1, letterSpacing: '-0.02em',
+                  color: BLK,
+                  animation: 'signInFadeUp 0.6s cubic-bezier(0.23,1,0.32,1) 0.05s both',
+                }}>
+                  Before we begin
+                </h2>
+                <p style={{
+                  fontFamily: 'Inter, sans-serif', fontWeight: 400,
+                  fontSize: 14, lineHeight: 1.5, color: GRY,
+                  maxWidth: 280,
+                  animation: 'signInFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) 0.2s both',
+                }}>
+                  Sign in so we can save your blueprint and you can revisit it anytime.
+                </p>
+                <button
+                  onClick={async () => {
+                    setSigningIn(true)
+                    try { await signInWithPopup(auth, googleProvider) }
+                    catch (err) { console.error('Sign in error:', err.message) }
+                    setSigningIn(false)
+                  }}
+                  disabled={signingIn}
+                  style={{
+                    width: '100%', maxWidth: 300,
+                    padding: '14px 24px', marginTop: 8,
+                    background: '#fff', color: BLK,
+                    border: '1.5px solid rgba(0,0,0,0.12)', borderRadius: 10,
+                    fontFamily: 'Inter, sans-serif', fontWeight: 500,
+                    fontSize: 14, letterSpacing: '-0.02em',
+                    cursor: signingIn ? 'wait' : 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                    animation: 'signInFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) 0.35s both',
+                    opacity: signingIn ? 0.7 : undefined,
+                    transition: 'opacity 0.2s',
+                  }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A10.96 10.96 0 001 12c0 1.77.42 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                  </svg>
+                  {signingIn ? 'Signing in...' : 'Continue with Google'}
+                </button>
+              </div>
+            ) : loading ? (
               <div style={{
                 flex: 1, display: 'flex', flexDirection: 'column',
                 alignItems: 'center', justifyContent: 'center',
@@ -1290,6 +1387,73 @@ export default function Questionnaire({ onComplete }) {
                     </div>
                   )}
                 </>
+              )}
+
+              {/* Photo upload */}
+              {q.type === 'photo' && (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+                  <label
+                    htmlFor="photo-upload"
+                    style={{
+                      width: 180, height: 200, borderRadius: 10,
+                      border: answer ? 'none' : '2px dashed #D0CCC6',
+                      background: answer ? 'transparent' : '#FAFAF8',
+                      display: 'flex', flexDirection: 'column',
+                      alignItems: 'center', justifyContent: 'center',
+                      cursor: 'pointer', overflow: 'hidden',
+                      transition: 'border-color 0.2s',
+                      position: 'relative',
+                    }}
+                  >
+                    {answer ? (
+                      <>
+                        <img src={answer} alt="Your photo" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                        <div style={{
+                          position: 'absolute', bottom: 8, right: 8,
+                          width: 32, height: 32, borderRadius: '50%',
+                          background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        }}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+                            <circle cx="12" cy="13" r="4"/>
+                          </svg>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#B5B0AB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+                          <circle cx="12" cy="13" r="4"/>
+                        </svg>
+                        <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, color: '#B5B0AB', marginTop: 8 }}>
+                          Upload photo
+                        </span>
+                        <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 10, color: '#D0CCC6', marginTop: 2 }}>
+                          Max 2 MB
+                        </span>
+                      </>
+                    )}
+                  </label>
+                  <input
+                    id="photo-upload"
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={e => {
+                      const file = e.target.files?.[0]
+                      if (!file) return
+                      if (file.size > 2 * 1024 * 1024) {
+                        alert('Photo must be under 2 MB')
+                        e.target.value = ''
+                        return
+                      }
+                      const reader = new FileReader()
+                      reader.onload = () => setAnswer(reader.result)
+                      reader.readAsDataURL(file)
+                    }}
+                  />
+                </div>
               )}
 
               {/* Reality check */}
