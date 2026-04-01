@@ -154,12 +154,12 @@ export default function FeaturesPage() {
 
   return (
     <div style={{
-      minHeight: '100vh',
+      height: '100vh', overflow: 'hidden',
       backgroundImage: 'url(/form%20image.png)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: 'fixed',
       backgroundColor: '#fff',
+      display: 'flex', flexDirection: 'column',
     }}>
       {/* Top blur */}
       <div style={{
@@ -172,7 +172,7 @@ export default function FeaturesPage() {
 
       {/* Header */}
       <div style={{
-        position: 'sticky', top: 0, zIndex: 20,
+        position: 'relative', zIndex: 20, flexShrink: 0,
         padding: '24px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       }}>
@@ -198,15 +198,19 @@ export default function FeaturesPage() {
 
       {/* Main card */}
       <div style={{
+        flex: 1, minHeight: 0,
         maxWidth: 900,
+        width: '100%',
         margin: '0 auto',
-        padding: '20px 24px 80px',
+        padding: '0 24px 24px',
       }}>
         <div style={{
           background: '#fff',
           borderRadius: 20,
           padding: '52px 48px',
           boxShadow: '0 12px 40px rgba(0,0,0,0.1)',
+          height: '100%',
+          overflowY: 'auto',
           ...anim(0.15),
         }}>
           {/* Hero */}
