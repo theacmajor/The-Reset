@@ -30,7 +30,7 @@ function IntroScreen({ onStart }) {
       minHeight: '100vh',
       backgroundImage: 'url(/Main%20image.png)',
       backgroundSize: 'cover', backgroundPosition: 'center',
-      backgroundColor: '#4A7A5C',
+      backgroundColor: '#fff',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       padding: '24px 16px',
     }}>
@@ -221,6 +221,34 @@ function AppInner() {
           Sign out
         </button>
       )}
+      {/* Mobile message */}
+      <div className="mobile-only" style={{
+        display: 'none',
+        position: 'fixed', inset: 0, zIndex: 99999,
+        background: '#fff',
+        alignItems: 'center', justifyContent: 'center',
+        padding: 32,
+      }}>
+        <div style={{
+          background: '#fff',
+          borderRadius: 14,
+          padding: '40px 32px',
+          textAlign: 'center',
+          maxWidth: 360,
+          boxShadow: '0 8px 30px rgba(0,0,0,0.08)',
+        }}>
+          <p style={{
+            fontFamily: "'Instrument Serif', serif",
+            fontSize: 28,
+            lineHeight: 1.2,
+            color: '#0D0D0D',
+            letterSpacing: '-0.02em',
+          }}>
+            For the full experience, please switch to desktop.
+          </p>
+        </div>
+      </div>
+
       {phase === 'intro' && (
         <IntroScreen onStart={() => { setMusicStarted(true); goTo('questionnaire') }} />
       )}

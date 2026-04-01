@@ -24,7 +24,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: #2A4A3A;
+    background: #fff;
     color: var(--black);
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -87,6 +87,10 @@
 .book-page::-webkit-scrollbar-thumb { background: #D8D4CE; border-radius: 4px; }
 .book-page::-webkit-scrollbar-thumb:hover { background: #C8C4BC; }
 .book-page { scrollbar-width: thin; scrollbar-color: #D8D4CE transparent; }
+
+@media (max-width: 768px) {
+  .mobile-only { display: flex !important; }
+}
 
 @media print {
   body, #root { background: white !important; border: none !important; }

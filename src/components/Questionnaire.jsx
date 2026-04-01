@@ -606,7 +606,7 @@ function LoadingScreen({ onDone }) {
         position: 'absolute', inset: 0, zIndex: 0,
         backgroundImage: 'url(/form%20image.png)',
         backgroundSize: 'cover', backgroundPosition: 'center',
-        backgroundColor: '#2A4A3A',
+        backgroundColor: '#fff',
       }} />
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: '30%', zIndex: 1,
@@ -1051,7 +1051,7 @@ export default function Questionnaire({ onComplete, user }) {
         position: 'absolute', inset: 0, zIndex: 0,
         backgroundImage: 'url(/form%20image.png)',
         backgroundSize: 'cover', backgroundPosition: 'center',
-        backgroundColor: '#2A4A3A',
+        backgroundColor: '#fff',
       }} />
 
       {/* ── Top progressive blur ── */}

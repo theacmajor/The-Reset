@@ -33,7 +33,7 @@ export default function MusicToggle({ shouldPlay = false }) {
 
   // Init audio
   useEffect(() => {
-    const audio = new Audio('/music.mp3')
+    const audio = new Audio('/music.m4a')
     audio.loop = true
     audio.volume = 0
     audio.preload = 'auto'
