@@ -1104,8 +1104,6 @@ export default function Questionnaire({ onComplete, user }) {
         display: 'flex', alignItems: 'flex-end',
         padding: '0 32px 32px',
         gap: 40,
-        overflowY: 'auto',
-        minHeight: 0,
       }}>
 
         {/* ── Left: Quote ── */}
@@ -1129,6 +1127,9 @@ export default function Questionnaire({ onComplete, user }) {
         {/* ── Right: Form card ── */}
         <div style={{
           width: 420, flexShrink: 0,
+          maxHeight: '100%',
+          overflowY: 'auto',
+          paddingBottom: 8,
           opacity: entered ? 1 : 0,
           transform: entered ? 'translateY(0)' : 'translateY(12px)',
           transition: 'opacity 0.5s cubic-bezier(0.23,1,0.32,1) 0.15s, transform 0.5s cubic-bezier(0.23,1,0.32,1) 0.15s',
