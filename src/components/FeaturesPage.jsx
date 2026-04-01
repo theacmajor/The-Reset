@@ -184,15 +184,15 @@ export default function FeaturesPage() {
           The Reset
         </Link>
         <Link to="/" style={{
-          fontFamily: 'Inter, sans-serif', fontSize: 14, fontWeight: 500,
-          color: '#F5F2EC', textDecoration: 'none',
-          padding: '12px 24px', borderRadius: 8,
-          background: '#0D0D0D', border: 'none',
-          display: 'inline-flex', alignItems: 'center', gap: 8,
-          transition: `transform 160ms ${EASE}`,
+          fontFamily: 'Inter, sans-serif', fontSize: 13, fontWeight: 500,
+          color: 'rgba(255,255,255,0.7)', textDecoration: 'none',
+          padding: '8px 18px', borderRadius: 50,
+          border: '1px solid rgba(255,255,255,0.2)',
+          background: 'rgba(255,255,255,0.08)',
+          backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
           ...anim(0.2),
         }}>
-          Take the quiz <span style={{ opacity: 0.5 }}>→</span>
+          Take the quiz
         </Link>
       </div>
 
