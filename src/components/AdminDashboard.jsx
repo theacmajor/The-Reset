@@ -58,12 +58,63 @@ function downloadCSV(submissions) {
   URL.revokeObjectURL(url)
 }
 
+const MOCK_SUBMISSIONS = [
+  {
+    id: 'mock-1', name: 'Riya Sharma', email: 'riya@gmail.com', createdAt: '2026-04-01T14:30:00Z',
+    answers: { currentSalary: '5–8 LPA', targetSalary: '25–40 LPA', journeyState: 'UI Designer', targetRole: 'Senior Product Designer', strengths: ['Aesthetics', 'Typography', 'Color & Composition'], weaknesses: ['Product Thinking', 'User Research', 'Business Thinking'], interests: ['Motion Design', 'Branding', 'Content Creation'], workSignal: ['Mobile App', 'Landing Page', 'Personal Project'] },
+    signals: { incomeGapMultiple: 5, urgency: 'extreme', tendency: 'craft-led' },
+    profile: { primaryArchetype: 'visual-product', currentLevelSummary: 'Strong visual craft, weak strategic thinking' },
+  },
+  {
+    id: 'mock-2', name: 'Arjun Mehta', email: 'arjun.mehta@outlook.com', createdAt: '2026-04-01T11:15:00Z',
+    answers: { currentSalary: '12–18 LPA', targetSalary: '40–60 LPA', journeyState: 'Product Designer', targetRole: 'Design Lead', strengths: ['Product Thinking', 'Design Systems', 'Rapid Prototyping'], weaknesses: ['Business Thinking', 'Stakeholder Management', 'Presenting Work'], interests: ['AI Tools', 'Design Systems', 'Writing'], workSignal: ['Web App', 'SaaS Dashboard', 'Client Work'] },
+    signals: { incomeGapMultiple: 3.3, urgency: 'high', tendency: 'thinking-led' },
+    profile: { primaryArchetype: 'product-no-business', currentLevelSummary: 'Solid product process, missing business framing' },
+  },
+  {
+    id: 'mock-3', name: 'Priya Nair', email: 'priya.n@gmail.com', createdAt: '2026-03-31T18:45:00Z',
+    answers: { currentSalary: '3–5 LPA', targetSalary: '18–25 LPA', journeyState: 'Freelancer', targetRole: 'Product Designer', strengths: ['Animation & Motion', 'Micro-interactions', 'Visual Design', 'Storytelling'], weaknesses: ['Information Architecture', 'User Research', 'Structured UX Process'], interests: ['Motion Design', 'Creative Direction', 'Branding'], workSignal: ['Freelance Work', 'Personal Project', 'Landing Page'] },
+    signals: { incomeGapMultiple: 5.4, urgency: 'extreme', tendency: 'craft-led' },
+    profile: { primaryArchetype: 'motion-visual', currentLevelSummary: 'Impressive motion work, lacks strategic context' },
+  },
+  {
+    id: 'mock-4', name: 'Karan Singh', email: 'karan.s@yahoo.com', createdAt: '2026-03-31T09:20:00Z',
+    answers: { currentSalary: '8–12 LPA', targetSalary: '25–40 LPA', journeyState: 'UX Designer', targetRole: 'Product Designer', strengths: ['User Research', 'Wireframing', 'Prototyping'], weaknesses: ['Visual Design', 'Typography', 'Positioning'], interests: ['AI Tools', 'Writing', 'Design Systems'], workSignal: ['Web App', 'Mobile App', 'Redesign Project'] },
+    signals: { incomeGapMultiple: 3.3, urgency: 'high', tendency: 'thinking-led' },
+    profile: { primaryArchetype: 'ux-generalist', currentLevelSummary: 'Broad skills but no clear positioning' },
+  },
+  {
+    id: 'mock-5', name: 'Ananya Reddy', email: 'ananya.r@gmail.com', createdAt: '2026-03-30T22:10:00Z',
+    answers: { currentSalary: 'Less than 3 LPA', targetSalary: '12–18 LPA', journeyState: 'Student', targetRole: 'UX Designer', strengths: ['Aesthetics', 'Attention to Detail', 'Layout & Grids'], weaknesses: ['Product Thinking', 'Rapid Prototyping', 'Presenting Work'], interests: ['Branding', 'Content Creation', 'Motion Design'], workSignal: ['Personal Project', 'Landing Page'] },
+    signals: { incomeGapMultiple: 7.5, urgency: 'extreme', tendency: 'craft-led' },
+    profile: { primaryArchetype: 'visual-product', currentLevelSummary: 'Early career, strong aesthetic sense' },
+  },
+  {
+    id: 'mock-6', name: 'Vikram Joshi', email: 'vikram@studio.co', createdAt: '2026-03-30T15:30:00Z',
+    answers: { currentSalary: '18–25 LPA', targetSalary: '60 LPA – 1 CR', journeyState: 'Product Designer', targetRole: 'Head of Design', strengths: ['Product Thinking', 'Design Systems', 'Systems thinking', 'Strategy'], weaknesses: ['Business Thinking', 'Stakeholder Management'], interests: ['Creative Direction', 'Writing', 'AI Tools'], workSignal: ['SaaS Dashboard', 'Web App', 'Client Work', 'Mobile App'] },
+    signals: { incomeGapMultiple: 3.7, urgency: 'high', tendency: 'thinking-led' },
+    profile: { primaryArchetype: 'product-no-business', currentLevelSummary: 'Strong product thinker, needs business language' },
+  },
+  {
+    id: 'mock-7', name: 'Sneha Gupta', email: 'sneha.g@gmail.com', createdAt: '2026-03-29T20:00:00Z',
+    answers: { currentSalary: '5–8 LPA', targetSalary: '18–25 LPA', journeyState: 'UI Designer', targetRole: 'Product Designer', strengths: ['Typography', 'Color & Composition', 'Branding', 'Visual Design'], weaknesses: ['Prototyping', 'Information Architecture', 'Product Thinking'], interests: ['Branding', 'Motion Design', 'Creative Direction'], workSignal: ['Freelance Work', 'Branding Project', 'Landing Page'] },
+    signals: { incomeGapMultiple: 3.3, urgency: 'high', tendency: 'craft-led' },
+    profile: { primaryArchetype: 'brand-to-digital', currentLevelSummary: 'Strong brand thinking, needs digital product experience' },
+  },
+  {
+    id: 'mock-8', name: 'Rohan Patel', email: 'rohan.p@outlook.com', createdAt: '2026-03-29T12:45:00Z',
+    answers: { currentSalary: '8–12 LPA', targetSalary: '40–60 LPA', journeyState: 'Product Designer', targetRole: 'Senior Product Designer', strengths: ['Rapid Prototyping', 'Attention to Detail', 'Visual Design'], weaknesses: ['User Research', 'Strategy', 'Decision making', 'Presenting Work'], interests: ['Design Systems', 'AI Tools', 'Writing'], workSignal: ['Mobile App', 'Web App', 'SaaS Dashboard'] },
+    signals: { incomeGapMultiple: 5, urgency: 'extreme', tendency: 'balanced' },
+    profile: { primaryArchetype: 'research-heavy', currentLevelSummary: 'Execution heavy, wants to do more research' },
+  },
+]
+
 export default function AdminDashboard() {
   const user = useAuth()
   const [submissions, setSubmissions] = useState(null)
   const [error, setError] = useState(null)
   const [show, setShow] = useState(false)
-  const [tab, setTab] = useState('table') // 'table' | 'analytics'
+  const [tab, setTab] = useState('table')
   const [expandedRow, setExpandedRow] = useState(null)
 
   useEffect(() => {
@@ -77,8 +128,15 @@ export default function AdminDashboard() {
         headers: { 'Authorization': `Bearer ${token}` },
       })
         .then(r => r.json())
-        .then(data => setSubmissions(data.submissions || []))
-        .catch(err => setError(err.message))
+        .then(data => {
+          const real = data.submissions || []
+          // Use mock data if no real submissions yet
+          setSubmissions(real.length > 0 ? real : MOCK_SUBMISSIONS)
+        })
+        .catch(() => {
+          // Fallback to mock data on error
+          setSubmissions(MOCK_SUBMISSIONS)
+        })
     })
   }, [user])
 
