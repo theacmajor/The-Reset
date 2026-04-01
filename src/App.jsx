@@ -132,7 +132,7 @@ function IntroScreen({ onStart }) {
           fontFamily: 'Inter, sans-serif',
           fontSize: 12, color: 'rgba(138,133,128,0.5)',
           textAlign: 'left',
-          padding: '12px 0 4px',
+          padding: '6px 0 0',
         }}>
           A project by{' '}
           <a
