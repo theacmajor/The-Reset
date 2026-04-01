@@ -184,15 +184,15 @@ export default function FeaturesPage() {
           The Reset
         </Link>
         <Link to="/" style={{
-          fontFamily: 'Inter, sans-serif', fontSize: 13, fontWeight: 500,
-          color: 'rgba(255,255,255,0.7)', textDecoration: 'none',
-          padding: '8px 18px', borderRadius: 50,
-          border: '1px solid rgba(255,255,255,0.2)',
-          background: 'rgba(255,255,255,0.08)',
-          backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          fontFamily: 'Inter, sans-serif', fontSize: 14, fontWeight: 500,
+          color: '#F5F2EC', textDecoration: 'none',
+          padding: '12px 24px', borderRadius: 8,
+          background: '#0D0D0D', border: 'none',
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          transition: `transform 160ms ${EASE}`,
           ...anim(0.2),
         }}>
-          Take the quiz
+          Take the quiz <span style={{ opacity: 0.5 }}>→</span>
         </Link>
       </div>
 
@@ -220,7 +220,7 @@ export default function FeaturesPage() {
             </span>
             <h1 style={{
               fontFamily: "'Instrument Serif', serif", fontWeight: 400,
-              fontSize: 'clamp(36px, 5vw, 48px)',
+              fontSize: 'clamp(43px, 6vw, 58px)',
               lineHeight: 1.1, letterSpacing: '-0.02em',
               color: '#0D0D0D', marginBottom: 12,
             }}>
@@ -263,7 +263,7 @@ export default function FeaturesPage() {
                       </span>
                       <h3 style={{
                         fontFamily: "'Instrument Serif', serif", fontWeight: 400,
-                        fontSize: f.type === 'full' || f.isEnd ? 24 : 19,
+                        fontSize: f.type === 'full' || f.isEnd ? 29 : 23,
                         lineHeight: 1.15, letterSpacing: '-0.02em',
                         color: '#0D0D0D', marginBottom: 8,
                       }}>
@@ -285,19 +285,6 @@ export default function FeaturesPage() {
           })}
         </div>
 
-        {/* Footer */}
-        <div style={{
-          textAlign: 'center', padding: '36px 0 20px',
-          ...anim(0.8),
-        }}>
-          <Link to="/" style={{
-            fontFamily: "'Instrument Serif', serif",
-            fontSize: 20, color: '#fff', textDecoration: 'none',
-            opacity: 0.8,
-          }}>
-            Take the quiz
-          </Link>
-        </div>
       </div>
     </div>
   )
