@@ -128,6 +128,26 @@ function IntroScreen({ onStart }) {
             }}
           />
         </div>
+        <p style={{
+          fontFamily: "'Instrument Serif', serif",
+          fontSize: 14, color: '#8A8580',
+          textAlign: 'center',
+          padding: '16px 0 4px',
+        }}>
+          A project by{' '}
+          <a
+            href="https://x.com/xyanandc"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: '#0D0D0D',
+              textDecoration: 'underline',
+              textUnderlineOffset: 3,
+            }}
+          >
+            Anand Chauhan
+          </a>
+        </p>
       </div>
     </div>
   )
