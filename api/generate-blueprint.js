@@ -1,5 +1,6 @@
 import OpenAI from 'openai'
 import { z } from 'zod'
+import { db, admin } from './lib/firestore.js'
 
 // ─── OpenAI client ──────────────────────────────────────────────────────────
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
@@ -250,6 +251,25 @@ INTERPRETED PROFILE:
 
 Return the BlueprintData JSON only.`,
     })
+
+    // Save to Firestore (fire and forget)
+    let userEmail = null
+    const authHeader = req.headers.authorization
+    if (authHeader?.startsWith('Bearer ')) {
+      try {
+        const decoded = await admin.auth().verifyIdToken(authHeader.slice(7))
+        userEmail = decoded.email
+      } catch {}
+    }
+    db.collection('submissions').add({
+      name: answers.name,
+      email: userEmail,
+      answers,
+      signals,
+      profile,
+      blueprint,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    }).catch(err => console.error('Firestore write failed:', err.message))
 
     res.json({ blueprint, profile })
   } catch (err) {

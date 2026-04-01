@@ -104,6 +104,12 @@ const FEATURES = [
     type: 'half',
   },
   {
+    tag: 'Admin',
+    title: 'Data rich dashboard',
+    body: 'Admin panel at /admin with email gated access. Submissions table with expandable rows, per question analytics with bar charts, and CSV export. All data stored in Firestore, served through authenticated serverless functions.',
+    type: 'full',
+  },
+  {
     tag: 'The End',
     title: 'Built in 3 sleepless nights',
     body: 'No Figma. No PRD. No sprint planning. Three days, no sleep, just a clear vision and the willingness to kill what doesn\'t work. That\'s The Reset.',

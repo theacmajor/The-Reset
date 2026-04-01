@@ -834,11 +834,18 @@ export default function Questionnaire({ onComplete, user }) {
     let cancelled = false
 
     // Start the real API call
-    fetch('/api/generate-blueprint', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(answers),
-    })
+    const sendRequest = async () => {
+      const token = await auth.currentUser?.getIdToken?.().catch(() => null)
+      return fetch('/api/generate-blueprint', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify(answers),
+      })
+    }
+    sendRequest()
       .then(r => r.json())
       .then(data => {
         if (!cancelled) apiResultRef.current = data

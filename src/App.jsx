@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Questionnaire from './components/Questionnaire'
 import BlueprintPage from './components/BlueprintPage'
-import { AuthProvider, useAuth } from './lib/AuthContext'
+import { useAuth } from './lib/AuthContext'
 import { signOut } from 'firebase/auth'
 import { auth } from './lib/firebase'
 
@@ -303,9 +303,5 @@ function AppInner() {
 }
 
 export default function App() {
-  return (
-    <AuthProvider>
-      <AppInner />
-    </AuthProvider>
-  )
+  return <AppInner />
 }

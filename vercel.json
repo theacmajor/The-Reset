@@ -2,9 +2,13 @@
   "functions": {
     "api/generate-blueprint.js": {
       "maxDuration": 60
+    },
+    "api/admin-submissions.js": {
+      "maxDuration": 30
     }
   },
   "rewrites": [
-    { "source": "/features", "destination": "/index.html" }
+    { "source": "/features", "destination": "/index.html" },
+    { "source": "/admin", "destination": "/index.html" }
   ]
 }
