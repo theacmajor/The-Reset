@@ -1104,6 +1104,8 @@ export default function Questionnaire({ onComplete, user }) {
         display: 'flex', alignItems: 'flex-end',
         padding: '0 32px 32px',
         gap: 40,
+        overflowY: 'auto',
+        minHeight: 0,
       }}>
 
         {/* ── Left: Quote ── */}
