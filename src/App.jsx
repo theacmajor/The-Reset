@@ -129,10 +129,10 @@ function IntroScreen({ onStart }) {
           />
         </div>
         <p style={{
-          fontFamily: "'Instrument Serif', serif",
-          fontSize: 14, color: '#8A8580',
-          textAlign: 'center',
-          padding: '16px 0 4px',
+          fontFamily: 'Inter, sans-serif',
+          fontSize: 12, color: 'rgba(138,133,128,0.5)',
+          textAlign: 'left',
+          padding: '12px 0 4px',
         }}>
           A project by{' '}
           <a
@@ -140,7 +140,7 @@ function IntroScreen({ onStart }) {
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              color: '#0D0D0D',
+              color: 'rgba(138,133,128,0.7)',
               textDecoration: 'underline',
               textUnderlineOffset: 3,
             }}
