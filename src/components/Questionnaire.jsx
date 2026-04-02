@@ -1050,8 +1050,9 @@ export default function Questionnaire({ onComplete, user }) {
 
   return (
     <div style={{
-      minHeight: '100vh', position: 'relative',
+      height: '100vh', position: 'relative',
       display: 'flex', flexDirection: 'column',
+      overflow: 'hidden',
     }}>
       {/* ── Full-screen BG ── */}
       <div style={{
@@ -1090,8 +1091,8 @@ export default function Questionnaire({ onComplete, user }) {
 
       {/* ── Top bar: "The Reset" ── */}
       <div style={{
-        position: 'relative', zIndex: 3,
-        padding: '28px 36px',
+        position: 'relative', zIndex: 3, flexShrink: 0,
+        padding: '16px 36px',
         opacity: entered ? 1 : 0,
         transform: entered ? 'translateY(0)' : 'translateY(10px)',
         transition: 'opacity 0.5s cubic-bezier(0.23,1,0.32,1) 0.1s, transform 0.5s cubic-bezier(0.23,1,0.32,1) 0.1s',
@@ -1107,7 +1108,7 @@ export default function Questionnaire({ onComplete, user }) {
 
       {/* ── Main content area ── */}
       <div style={{
-        flex: 1, position: 'relative', zIndex: 2,
+        flex: 1, minHeight: 0, position: 'relative', zIndex: 2,
         display: 'flex', alignItems: 'flex-end',
         padding: '0 32px 32px',
         gap: 40,
@@ -1136,6 +1137,7 @@ export default function Questionnaire({ onComplete, user }) {
           width: 420, flexShrink: 0,
           maxHeight: '100%',
           overflowY: 'auto',
+          overflowX: 'hidden',
           paddingBottom: 8,
           opacity: entered ? 1 : 0,
           transform: entered ? 'translateY(0)' : 'translateY(12px)',
